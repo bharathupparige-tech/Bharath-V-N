@@ -1,0 +1,24 @@
+package com.crio.xnews;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.List;
+
+public class NewsParser {
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public static List<NewsArticle> parse(String json) throws IOException {
+
+        JsonNode rootNode = objectMapper.readTree(json);
+        JsonNode articlesNode = rootNode.get("articles");
+
+        return objectMapper.readValue(
+                articlesNode.toString(),
+                objectMapper.getTypeFactory()
+                        .constructCollectionType(List.class, NewsArticle.class)
+        );
+    }
+}
